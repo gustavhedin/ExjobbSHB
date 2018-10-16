@@ -5,8 +5,14 @@ function graph_output = chainRule(graph)
 % "current" for simplicity:
 current = graph;
 
-% Set derivative to 1: (df/df = 1)
-current.derivative = 1;
+% if derivative is 'zeroFlag', then the graph represents a payoff of zero and all 
+% derivatives should cointinue to be zero.
+if current.derivative == 'zeroFlag'
+    graph_output = graph;
+    return
+else % Set derivative to 1: (df/df = 1)
+    current.derivative = 1;
+end
 
 % Push derivative to parents, and grandparents etc.. :
 push_derivative(current);
@@ -16,20 +22,21 @@ graph_output = graph;
 end
 
 function push_derivative(node)
+    if isempty(node.parents)
+        return
+    end
     % Push derivative from current node to the nodes parents, according to
     % corresponding derivativeOp-function:
     node.derivativeOp(node.derivative, node.parents);
-    % If "left-parent" has parents, then call the push_derivative function
+    % Since there exist at least one parent, this is the left one. Call the push_derivative function
     % on the current nodes left-parent.
-    if ~isempty(node.parents(1).parents)
-        push_derivative(node.parents(1))
-    end
-    % If "left-parent" has parents, then call the push_derivative function
-    % on the current nodes left-parent.
-    if ~isempty(node.parents(2).parents)
+    push_derivative(node.parents(1))
+    % If node has "right-parent", then call the push_derivative function
+    % on the current nodes right-parent.
+    if size(node.parents,2)==2
         push_derivative(node.parents(2))
     end
-    % We have no pused all derivatives down to all start nodes. 
+    % We have now pused all derivatives down to all start nodes. 
 end
 
 
