@@ -4,6 +4,9 @@ classdef valder
    % starting with a known simple valder such as x=valder(3,1) and 
    % propagating it through elementary functions and operators. 
    % by Richard D. Neidinger 10/23/08
+   %
+   % Modified by Gustav Hedin 2018
+   
    properties
       val  %function value
       der  %derivative value or gradient vector

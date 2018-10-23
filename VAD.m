@@ -3,6 +3,7 @@ STRIKEPRICE = [];
 DELTA = [];
 VEGA = [];
 RHO = [];
+x_mean = [];
 
 for p = 1:20
 
@@ -11,11 +12,11 @@ for p = 1:20
     sigma = 0.2;        % volatility
     Startvalue = p;     % Starting value for the underlying asset at time 0.
     T = 1;              % Time horizon
-    N = 1000;           % # simulation points on [0,T];
+    N = 30;           % # simulation points on [0,T];
     K = 10;             % Strike price
     nbr_MC = 10000;     % # of Monte Carlo simulations
     nbrMC_z = 10;       % # of samples over the barrier
-    checkpoints = [300 600 900]; % N = ..
+    checkpoints = [5 10 15 20 21 22 23 24 25 26 27 28 29]; % N = ..
 
     % Declaring nedded variables:
     h = T/N;                            % Stepsize
@@ -45,22 +46,33 @@ for p = 1:20
                 + (Y_rho(n-1,:)*sigma*sqrt(h)+ 0*X(n-1,:)).*Z; 
      end
 
-    %  % Check Barrier:
-    %  for k = checkpoints
-    %      for p=1:nbr_MC
-    %          if X(k,p)<K-1
-    %              X(:,p) = zeros(N,1);
-    %          end
-    %      end
-    %  end
 
      % Find price 
      Z = randn(1,nbr_MC);
      Xend = X(end,:)+r*h*X(end,:) + sigma*sqrt(h)*X(end,:).*Z;
+     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+     % Check asset at barrier checkpoints
+     
+     % payoff = V(end)*prodsum(I1, I2 ...) , Ii = 1 if X > K else 0, at a specific barrier checkingpoint.  
+     %  % Check Barrier:
+     counter = 0;
+     for i=1:length(checkpoints)
+         k = checkpoints(i);
+         for j = 1:nbr_MC
+             if X(k,j) < K*1.5
+                 %X(:,j) = zeros(N+1,1);
+                 X(:,j) = [];
+                 counter = counter + 1;
+             end
+         end
+     end
+     
+     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+     
      Price = mean(max(Xend-K,0))*exp(-r*T);   
 
      % Generate random nubers for the step over the barrier.
-     Z = randn(nbrMC_z,nbr_MC);
+     Z = randn(nbrMC_z,nbr_MC-counter);
 
      % Obtain valued for the process and derivatives on the other side of
      % the barrier:
@@ -96,12 +108,9 @@ for p = 1:20
                 + dsig_dtheta.*(V_Tplus-2*V_Tdot+V_Tminus).*((Z.^2-1).*divfactor)-r*20*V_Tdot))*exp(-r*T); % kolla slutet p? denna formel. Betydligt st?rre skillnad i Rho ?n andra greker j?mf?rt med verifieringe n. St?mmer om man l?gger till en faktor 20 mitt i. Varf?r?
 
         % Here, apply an AD-tequnique to get 2nd order derivatives. 
-
-
+        
     X = [X;Xend];
-    % Here, redo simulation until 1 step before next barrier:
 
-    % payoff = V(end)*prodsum(I1, I2 ...) , Ii = 1 if X > K else 0, at a specific barrier checkingpoint.  
 
     % Verification:------------------------------------------------------------
 
@@ -131,21 +140,22 @@ for p = 1:20
     % price_verification
     % Price
     
-    
-    
     STRIKEPRICE = [STRIKEPRICE Startvalue];
     DELTA = [DELTA Delta];
     VEGA = [VEGA Vega];
     RHO = [RHO Rho];
     
+    MEAN = mean(X');
+    x_mean = [x_mean MEAN(end)];
 
 end
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    plot(STRIKEPRICE,DELTA,'o--r')
+    plot(STRIKEPRICE,payoff(x_mean,K),'y')
     hold on
+    plot(STRIKEPRICE,DELTA,'o--r')
     plot(STRIKEPRICE,VEGA,'o--m')
     plot(STRIKEPRICE,RHO,'o--b')
-    legend('DELTA','VEGA','RHO')
+    legend('PAYOFF','DELTA','VEGA','RHO')
 
     d1 = (log(STRIKEPRICE./K) + (r+0.5*sigma^2)*(T-tt))./(sigma*sqrt(T-tt));
     d2 = d1 - sigma*sqrt(T-tt);

@@ -12,8 +12,8 @@ classdef ADRev <  handle
     %   division          adr_div()
     %   natural exponent  adr_exp() 
     %   natural logarithm adr_ln()  
-    %   ...
-    %
+    %   sqrare root       adr_sqrt()
+    %   step function     adr_step()
 
     properties
         value
@@ -48,7 +48,7 @@ classdef ADRev <  handle
         % ADRev-objects:
         
         % Addition
-        function result = adr_add(x,y)
+        function result = plus(x,y)
             if ~isa(x,'ADRev')
                 x = ADRev(x);
             elseif ~isa(y,'ADRev')
@@ -66,7 +66,7 @@ classdef ADRev <  handle
         end
         
         % Subtraction
-        function result = adr_sub(x,y)
+        function result = minus(x,y)
             if ~isa(x,'ADRev')
                 x = ADRev(x);
             elseif ~isa(y,'ADRev')
@@ -84,7 +84,7 @@ classdef ADRev <  handle
         end
         
         % Multiplication:
-        function result = adr_mul(x,y)
+        function result = mtimes(x,y)
             if ~isa(x,'ADRev')
                 x = ADRev(x);
             elseif ~isa(y,'ADRev')
@@ -102,7 +102,7 @@ classdef ADRev <  handle
         end
         
         % Division
-        function result = adr_div(x,y)
+        function result = mrdivide(x,y)
             if ~isa(x,'ADRev')
                 x = ADRev(x);
             elseif ~isa(y,'ADRev')
@@ -121,7 +121,7 @@ classdef ADRev <  handle
         end
         
         % Natural exponent
-        function result = adr_exp(x)
+        function result = exp(x)
             if ~isa(x,'ADRev')
                 x = ADRev(x);
             end
@@ -136,7 +136,7 @@ classdef ADRev <  handle
         end
         
         % Natural logarithm
-        function result = adr_ln(x)
+        function result = ln(x)
             if ~isa(x,'ADRev')
                 x = ADRev(x);
             end
@@ -151,7 +151,7 @@ classdef ADRev <  handle
         end
         
         % Power
-        function result = adr_pow(x,p)
+        function result = mpower(x,p)
             if ~isa(x,'ADRev')
                 x = ADRev(x);
             end
@@ -185,7 +185,7 @@ classdef ADRev <  handle
         end
         
         % sine
-        function result = adr_sin(x)
+        function result = sin(x)
             if ~isa(x,'ADRev')
                 x = ADRev(x);
             end
@@ -200,7 +200,7 @@ classdef ADRev <  handle
         end
         
         % cosine
-        function result = adr_cos(x)
+        function result = cos(x)
             if ~isa(x,'ADRev')
                 x = ADRev(x);
             end
@@ -215,7 +215,7 @@ classdef ADRev <  handle
         end
         
         % square root
-        function result = adr_sqrt(x)
+        function result = sqrt(x)
             if ~isa(x,'ADRev')
                 x = ADRev(x);
             end
@@ -230,7 +230,7 @@ classdef ADRev <  handle
         end
         
         % step-function
-        function result = adr_step(x)
+        function result = step(x)
             if ~isa(x,'ADRev')
                 x = ADRev(x);
             end
@@ -243,11 +243,30 @@ classdef ADRev <  handle
         
         function modified_parents = adr_stepD(prevDerivative, adNodes)
             a = 0.001; % S?tta denna parameter n?gon annanstans? i properties?
-            adNodes(1).derivative = adNodes(1).derivative + prevDerivative.*(exp(-adNodes(1).value.^2/(2*a))/(sqrt(a*pi)));
+            new_derivative = myDirac(adNodes(1).value);
+            adNodes(1).derivative = adNodes(1).derivative + prevDerivative.*new_derivative;
             modified_parents = adNodes;
         end
         
+        %-- plot function --------------------------------------------------------%
+        function plot_adrev(node) % Hur g?ra detta? V?rt?
+            graph(node);
+            plot(1);
+        end
     end
    
 end
+
+% --- Help functions -----------------------------------------------------%
+function output = myDirac(x)
+output = x;
+for i=1:length(x)
+    if x(i)==0
+        output(i) = 100; % 100 or how big? 
+    else
+        output(i) = 0;
+    end
+end
+end
+
 
