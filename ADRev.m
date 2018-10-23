@@ -248,6 +248,44 @@ classdef ADRev <  handle
             modified_parents = adNodes;
         end
         
+        function result = adr_payoff(X,K)
+            P = zeros(size(X.value,1),size(X.value,2));
+            
+            if size(P,1) > size(P,2)
+                d = size(P,1);
+            else
+                d = size(P,2);
+            end
+            
+            for i=1:d
+                P(i) = max(0,X.value(i)-K);
+            end
+            result = ADRev(P);
+            result.derivativeOp = @ adr_payoffD;
+            result.parents = X;
+        end
+        
+        function modified_parents = adr_payoffD(prevDerivative, adNodes)
+            P = zeros(size(adNodes.value,1),size(adNodes.value,2));
+                
+            if size(P,1) > size(P,2)
+                d = size(P,1);
+            else
+                d = size(P,2);
+            end
+                
+                for i=1:d
+                    if adNodes.value(i)-10 > 0
+                        P(i) = 1;
+                    else
+                        P(i) = 0;
+                    end
+                end
+                
+            adNodes(1).derivative = adNodes(1).derivative + prevDerivative.*P;
+            modified_parents = adNodes;
+        end
+        
         %-- plot function --------------------------------------------------------%
         function plot_adrev(node) % Hur g?ra detta? V?rt?
             graph(node);

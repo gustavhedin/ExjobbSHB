@@ -14,7 +14,7 @@ for p = 1:20
     T = 1;              % Time horizon
     N = 30;           % # simulation points on [0,T];
     K = 10;             % Strike price
-    nbr_MC = 10000;     % # of Monte Carlo simulations
+    nbr_MC = 100000;     % # of Monte Carlo simulations
     nbrMC_z = 10;       % # of samples over the barrier
     checkpoints = [5 10 15 20 21 22 23 24 25 26 27 28 29]; % N = ..
 
@@ -105,7 +105,7 @@ for p = 1:20
          dmu_dtheta = repmat(Y_rho(end,:)*(1+r*h) + X(end,:)*h,nbrMC_z,1);
          dsig_dtheta =  repmat(Y_rho(end,:)*sigma*sqrt(h) + X(end,:)*0,nbrMC_z,1);
          Rho = mean(mean(dmu_dtheta.*(1/2).*(V_Tplus-V_Tminus).*(Z.*divfactor)...
-                + dsig_dtheta.*(V_Tplus-2*V_Tdot+V_Tminus).*((Z.^2-1).*divfactor)-r*20*V_Tdot))*exp(-r*T); % kolla slutet p? denna formel. Betydligt st?rre skillnad i Rho ?n andra greker j?mf?rt med verifieringe n. St?mmer om man l?gger till en faktor 20 mitt i. Varf?r?
+                + dsig_dtheta.*(V_Tplus-2*V_Tdot+V_Tminus).*((Z.^2-1).*divfactor)-T*V_Tdot))*exp(-r*T); % kolla slutet p? denna formel. Betydligt st?rre skillnad i Rho ?n andra greker j?mf?rt med verifieringe n. St?mmer om man l?gger till en faktor 20 mitt i. Varf?r?
 
         % Here, apply an AD-tequnique to get 2nd order derivatives. 
         

@@ -43,14 +43,10 @@ for s=5:15
     sigma_der = sigma_der/nbrMC;
     r_der = r_der/nbrMC;
     tau_der = tau_der/nbrMC;
+    
+    optionprice = X(end)*exp(-r.value*tau.value);
 
-    % disp('payoff')
-    % X(end,:)
-
-    t = ((0:1:N)'/N)*tau.value;
-    t_ = flipud(t);
-    optionprice = X(end)*exp(-r.value*t_);
-
+    
 %     figure
 %     plot(X,'o--r')
 %     hold on
@@ -71,6 +67,7 @@ for s=5:15
 
 end
 
+    RHO = (RHO-tau.value*OPTIONPRICE)*exp(-r.value*tau.value);
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     figure

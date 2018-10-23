@@ -63,6 +63,8 @@ for s = 5:15
 
 end
 
+    RHO = (RHO-tau.val*OPTIONPRICE)*exp(-r.val*tau.val);
+
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     figure
     plot(UNDERLYING,OPTIONPRICE,'o--c')
