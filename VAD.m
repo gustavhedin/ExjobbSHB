@@ -55,24 +55,24 @@ for p = 1:20
      
      % payoff = V(end)*prodsum(I1, I2 ...) , Ii = 1 if X > K else 0, at a specific barrier checkingpoint.  
      %  % Check Barrier:
-     counter = 0;
-     for i=1:length(checkpoints)
-         k = checkpoints(i);
-         for j = 1:nbr_MC
-             if X(k,j) < K*1.5
-                 %X(:,j) = zeros(N+1,1);
-                 X(:,j) = [];
-                 counter = counter + 1;
-             end
-         end
-     end
+%      counter = 0;
+%      for i=1:length(checkpoints)
+%          k = checkpoints(i);
+%          for j = 1:nbr_MC
+%              if X(k,j) < K*1.5
+%                  %X(:,j) = zeros(N+1,1);
+%                  X(:,j) = [];
+%                  counter = counter + 1;
+%              end
+%          end
+%      end
      
      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
      
      Price = mean(max(Xend-K,0))*exp(-r*T);   
 
      % Generate random nubers for the step over the barrier.
-     Z = randn(nbrMC_z,nbr_MC-counter);
+     Z = randn(nbrMC_z,nbr_MC);
 
      % Obtain valued for the process and derivatives on the other side of
      % the barrier:
