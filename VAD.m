@@ -12,11 +12,11 @@ for p = 1:20
     sigma = 0.2;        % volatility
     Startvalue = p;     % Starting value for the underlying asset at time 0.
     T = 1;              % Time horizon
-    N = 30;           % # simulation points on [0,T];
+    N = 30;             % # simulation points on [0,T];
     K = 10;             % Strike price
-    nbr_MC = 100000;     % # of Monte Carlo simulations
+    nbr_MC = 100000;    % # of Monte Carlo simulations
     nbrMC_z = 10;       % # of samples over the barrier
-    checkpoints = [5 10 15 20 21 22 23 24 25 26 27 28 29]; % N = ..
+
 
     % Declaring nedded variables:
     h = T/N;                            % Stepsize
@@ -50,24 +50,10 @@ for p = 1:20
      % Find price 
      Z = randn(1,nbr_MC);
      Xend = X(end,:)+r*h*X(end,:) + sigma*sqrt(h)*X(end,:).*Z;
-     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-     % Check asset at barrier checkpoints
-     
+
+     % Check asset at barrier checkpoints ?     
      % payoff = V(end)*prodsum(I1, I2 ...) , Ii = 1 if X > K else 0, at a specific barrier checkingpoint.  
-     %  % Check Barrier:
-%      counter = 0;
-%      for i=1:length(checkpoints)
-%          k = checkpoints(i);
-%          for j = 1:nbr_MC
-%              if X(k,j) < K*1.5
-%                  %X(:,j) = zeros(N+1,1);
-%                  X(:,j) = [];
-%                  counter = counter + 1;
-%              end
-%          end
-%      end
      
-     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
      
      Price = mean(max(Xend-K,0))*exp(-r*T);   
 
