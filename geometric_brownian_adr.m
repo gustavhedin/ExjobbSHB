@@ -8,7 +8,7 @@ W = W*sqrt(T);
 Y = (r-(sigma^2)/2)*t + sigma * W;
 X = startvalue*exp(Y);
 
-X_path = payoff(X,K);
+X_path = adr_payoff(X,K);
 
 %%% Med ADRev-objects:
 % t = (0:1:N)'/N;                   % t is the column vector [0 1/N 2/N ... 1]
@@ -22,16 +22,16 @@ X_path = payoff(X,K);
 
 end
 
-function P = payoff(X,K)
-    P = X;
-    for i = 1:size(P.value,1)
-        if X.value(i)-K > 0
-            P.value(i) = X.value(i)-K;
-        else
-            P.value(i) = 0;
-        end
-    end
-%    if  X.value(size(P.value,1))-K <= 0
-%        P.derivative = 'zeroFlag';
-%    end
-end
+% function P = payoff(X,K)
+%     P = X;
+%     for i = 1:size(P.value,1)
+%         if X.value(i)-K > 0
+%             P.value(i) = X.value(i)-K;
+%         else
+%             P.value(i) = 0;
+%         end
+%     end
+% %    if  X.value(size(P.value,1))-K <= 0
+% %        P.derivative = 'zeroFlag';
+% %    end
+% end
