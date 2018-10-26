@@ -1,6 +1,12 @@
 # exjobbSHB
 Code files for Masters Thesis
 
+# VAD
+Uses Vibrato to calculate first order greeks.
+
+# Forward AD
+mc_ad_test uses forward mode AD objects (valder-objects) to calculate first order greeks. Underlying trajectory is generated in file geometric_browninian.m 
+
 # ReverseAD
-Run file testrevad_script
-That file uses ADRev-objects, performs the forward sweep (evaluating the function and builds the calculation tree) with "function_testrevad" and accumulates derivatives in reverse by calling "chainRule".
+mc_revad_test uses reverse mode AD objects (ADRev-objects) to calculate first order greeks. Underlying trajectory is generated in file geometric_browninian_adr.m 
+
